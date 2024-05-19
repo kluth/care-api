@@ -60,9 +60,16 @@ namespace CareApi.Presentation
         }
 
         // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
-        public void DeleteUser(int id)
+        [HttpDelete("{id:guid}")]
+        public IActionResult DeleteUser(Guid id)
         {
+            var user = _context.Users.Find(id);
+            if (user is null) {
+                return NotFound();
+            }
+            _context.Users.Remove(user);
+            _context.SaveChanges();
+            return Ok(user);
         }
     }
 }
